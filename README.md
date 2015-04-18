@@ -1,5 +1,5 @@
 # posty
-Library for create Http requests asynchronous easily and customizable
+Android Library for create Http requests asynchronous easily and customizable, with added one or more files.
 
 
 Example of usage:
