@@ -1,14 +1,14 @@
 package com.marcodama7.posty.core;
 
 import com.marcodama7.posty.listeners.PostyResponseListener;
-import com.marcodama7.posty.message.PostyAttachment;
+import com.marcodama7.posty.message.PostyFile;
 import com.marcodama7.posty.message.PostyBody;
 import com.marcodama7.posty.message.PostyRequest;
+import com.marcodama7.posty.message.PostyResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -96,44 +96,157 @@ public class PostyRequestDec {
     }
 
 
+    /***********************************************************************************************************************************/
+    /* Body creation methods
+    /***********************************************************************************************************************************/
 
-    /* Overloading body methods */
+
+    /**
+     * Creation of body passing custom PostyBody object
+     * @param postyBody
+     * @return PostyRequestDec
+     */
     public PostyRequestDec body(PostyBody postyBody) {
         request.setBody(postyBody);
         return this;
     }
 
+    /**
+     * Creation of body passing paramethers of pairs of key-value (in a Map<String, String> )
+     * @param paramethers
+     * @return PostyRequestDec
+     */
     public PostyRequestDec body(Map<String, String> paramethers) {
-        request.setBody(new PostyBody(paramethers,false));
+        if (request.getBody() != null && request.getBody().hasBody()) {
+            request.getBody().addBody(paramethers);
+        }
+        else {
+            request.setBody(new PostyBody(paramethers,false));
+        }
         return this;
     }
 
-    public PostyRequestDec body(Map<String, String> paramethers, boolean postDataUrlEncoded) {
-        request.setBody(new PostyBody(paramethers, postDataUrlEncoded));
+    /**
+     * Adding in a body one paramether
+     * @param key
+     * @param value
+     * @return
+     */
+    public PostyRequestDec body(String key, String value) {
+        if (request.getBody() == null) {
+            request.setBody(new PostyBody());
+        }
+        request.getBody().addBodyParam(key, value);
         return this;
     }
 
+
+    /**
+     * Creation of body passing paramethers and store in body urlencoded,
+     * (ex key1=val1&key2=val2....)
+     * @param paramethers
+     * @return
+     */
+    public PostyRequestDec bodyUrlEncoded(Map<String, String> paramethers) {
+        if (request.getBody() != null && request.getBody().hasBody()) {
+            request.getBody().addBodyParamUrlEncoded(paramethers);
+        }
+        else {
+            request.setBody(new PostyBody(paramethers,true));
+        }
+        return this;
+    }
+
+    /**
+     * Creation of body with custom content (Raw values stored in a string)
+     * @param customRawBody
+     * @return
+     */
     public PostyRequestDec body(String customRawBody) {
         request.setBody(new PostyBody(customRawBody));
         return this;
     }
 
+    /**
+     * Creation of body with JsonObject
+     * @param jsonObject
+     * @return
+     */
     public PostyRequestDec body(JSONObject jsonObject) {
         request.setBody(new PostyBody(jsonObject));
         return this;
     }
 
+    /**
+     * Creation of body with jsonArray
+     * @param jsonArray
+     * @return
+     */
     public PostyRequestDec body(JSONArray jsonArray) {
         request.setBody(new PostyBody(jsonArray));
         return this;
     }
 
-    public PostyRequestDec body(List<PostyAttachment> files) {
+    /**
+     * Creation of body with a list of files (to be uploaded!)
+     * Any file is stored in a object PostyFile
+     * @param files
+     * @return
+     */
+    public PostyRequestDec body(List<PostyFile> files) {
         request.setBody(new PostyBody(files));
         return this;
     }
 
-    public PostyRequestDec body(Map<String, String> paramethers, List<PostyAttachment> files) {
+    /**
+     * Adding PostyFile
+     * @param file
+     * @return
+     */
+    public PostyRequestDec body(PostyFile file) {
+        if (request.getBody() == null) {
+            request.setBody(new PostyBody());
+        }
+        request.getBody().add(file);
+        return this;
+    }
+
+    /**
+     * Adding a file in a body
+     * @param key
+     * @param filePath
+     * @param mimeType
+     * @return
+     */
+    public PostyRequestDec file(String key, String filePath, String mimeType) {
+        if (request.getBody() == null) {
+            request.setBody(new PostyBody());
+        }
+        request.getBody().addFile(key, filePath, mimeType);
+        return this;
+    }
+
+    /**
+     * Adding a file in a body
+     * @param key
+     * @param filePath
+     * @return
+     */
+    public PostyRequestDec file(String key, String filePath) {
+        if (request.getBody() == null) {
+            request.setBody(new PostyBody());
+        }
+        request.getBody().addFile(key, filePath);
+        return this;
+    }
+
+    /**
+     * Creation of body
+     * @param paramethers
+     * @param files
+     * @return
+     */
+    public PostyRequestDec body(Map<String, String> paramethers, List<PostyFile> files) {
         request.setBody(new PostyBody(paramethers, files));
         return this;
     }

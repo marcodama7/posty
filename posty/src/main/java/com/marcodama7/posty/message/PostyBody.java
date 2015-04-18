@@ -23,10 +23,80 @@ public class PostyBody {
 
     private String customBody;  // custom body, for more customization
     private Map<String,String> paramethers; // pair key-values paramethers (for http request who accepts paramethers)
-    private List<PostyAttachment> files; // pair key-values parahers for send files. PostyAttachment = wrapper for file
+    private List<PostyFile> files; // pair key-values parahers for send files. PostyFile = wrapper for file
     private int bodyType = 0;   // type of body (Content-Type)
 
-    public static PostyBody createCustom(String customBody, Map<String,String> paramethers, List<PostyAttachment> files, int bodyType){
+
+    public void addBody(String customBody) {
+        this.customBody = customBody;
+    }
+
+    public void addBody(Map<String,String> paramethers) {
+        if (this.paramethers == null || this.paramethers.size() < 1) {
+            this.paramethers = paramethers;
+        }
+        else {
+            this.paramethers.putAll(paramethers);
+        }
+        bodyType = (files == null || files.size() < 1) ? BODY_FORM_DATA : BODY_MULTIPART;
+    }
+
+    public void addBodyParam(String key, String value) {
+        if (paramethers == null) paramethers = new HashMap<String,String>();
+        paramethers.put(key, value);
+        bodyType = (files != null && files.size() > 0) ? BODY_MULTIPART : BODY_FORM_DATA;
+    }
+
+    public void addBodyParam(String paramUrlEncoded) {
+        customBody = paramUrlEncoded;
+        bodyType = BODY_URLENCODED_FORM_DATA;
+    }
+
+    public void addBodyParamUrlEncoded(String key, String value) {
+        customBody = (customBody == null || customBody.length() < 1) ? key+"="+value : "&"+key+"="+value;
+        bodyType = BODY_URLENCODED_FORM_DATA;
+    }
+
+    public void addBodyParamUrlEncoded(Map<String, String> values) {
+        if (values != null) {
+            Iterator<String> iKey = values.keySet().iterator();
+            while (iKey.hasNext()) {
+                String key = iKey.next();
+                String value = values.get(key);
+                addBodyParamUrlEncoded(key, value);
+            }
+        }
+    }
+
+    public void add(PostyFile file) {
+        if (this.files == null) {
+            this.files = new ArrayList<PostyFile>();
+        }
+        this.files.add(file);
+        bodyType = BODY_MULTIPART;
+    }
+
+    public void add(List<PostyFile> files) {
+        if (this.files == null || this.files.size() < 1) {
+            this.files = files;
+        }
+        else {
+            this.files.addAll(files);
+        }
+        bodyType = BODY_MULTIPART;
+    }
+
+    public void addFile(String key, String filename, String mimeType) {
+        PostyFile postyFile = new PostyFile(key, filename, mimeType);
+        add(postyFile);
+    }
+
+    public void addFile(String key, String filename) {
+        PostyFile postyFile = new PostyFile(key, filename);
+        add(postyFile);
+    }
+
+    public static PostyBody createCustom(String customBody, Map<String,String> paramethers, List<PostyFile> files, int bodyType){
         PostyBody body = new PostyBody();
         body.customBody = customBody;
         body.paramethers = paramethers;
@@ -43,8 +113,6 @@ public class PostyBody {
     public PostyBody() {
         bodyType = BODY_NULL;
     }
-
-
 
     public PostyBody(Map<String, String> paramethers) {
         this(paramethers, false);
@@ -87,12 +155,12 @@ public class PostyBody {
         customBody = jsonObject.toString();
     }
 
-    public PostyBody(List<PostyAttachment> files) {
+    public PostyBody(List<PostyFile> files) {
         bodyType = BODY_MULTIPART;
         this.files = files;
     }
 
-    public PostyBody(Map<String, String> paramethers, List<PostyAttachment> files) {
+    public PostyBody(Map<String, String> paramethers, List<PostyFile> files) {
         bodyType = BODY_MULTIPART;
         this.files = files;
         this.paramethers = paramethers;
@@ -115,9 +183,9 @@ public class PostyBody {
         return paramethers;
     }
 
-    public List<PostyAttachment> getFiles() {
+    public List<PostyFile> getFiles() {
         if (files == null) {
-            files = new ArrayList<PostyAttachment>();
+            files = new ArrayList<PostyFile>();
         }
         return files;
     }

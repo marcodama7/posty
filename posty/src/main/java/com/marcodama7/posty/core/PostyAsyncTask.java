@@ -3,6 +3,7 @@ package com.marcodama7.posty.core;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.marcodama7.posty.message.PostyFile;
 import com.marcodama7.posty.message.PostyRequest;
 
 import java.io.BufferedReader;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.marcodama7.posty.message.PostyResponse;
-import com.marcodama7.posty.message.PostyAttachment;
 import com.marcodama7.posty.message.PostyBody;
 import com.marcodama7.posty.util.UriUtils;
 
@@ -206,7 +206,7 @@ import com.marcodama7.posty.util.UriUtils;
                         byte[] buffer;
                         int maxBufferSize = 1 * 1024 * 1024;
 
-                        for (PostyAttachment mpf : request.getBody().getFiles()) {
+                        for (PostyFile mpf : request.getBody().getFiles()) {
                             if (mpf == null || mpf.getFileKey() == null || mpf.getFilePath() == null)
                                 continue;
                             String[] q = mpf.getFilePath().split("/");

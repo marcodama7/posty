@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import com.marcodama7.posty.core.Posty;
 import com.marcodama7.posty.core.PostyMethod;
 import com.marcodama7.posty.listeners.PostyResponseListener;
-import com.marcodama7.posty.message.PostyAttachment;
+import com.marcodama7.posty.message.PostyFile;
 import com.marcodama7.posty.message.PostyResponse;
 import com.marcodama7.posty.util.RealPathUtil;
 
@@ -96,14 +96,14 @@ public class MainActivity extends ActionBarActivity {
                 }
 
                 // Reading files attachment data
-                List<PostyAttachment> files = new ArrayList<PostyAttachment>();
+                List<PostyFile> files = new ArrayList<PostyFile>();
                 if (realFilePathImage1 != null && realFilePathImage1.length() > 0) {
                     String key = (image1_key.getText().length() > 0) ? image1_key.getText().toString() : "immagine1";
-                    files.add(new PostyAttachment(key, realFilePathImage1));
+                    files.add(new PostyFile(key, realFilePathImage1));
                 }
                 if (realFilePathImage2 != null && realFilePathImage2.length() > 0) {
                     String key = (image2_key.getText().length() > 0) ? image2_key.getText().toString() : "immagine2";
-                    files.add(new PostyAttachment(key, realFilePathImage2));
+                    files.add(new PostyFile(key, realFilePathImage2));
                 }
 
                 Posty.newRequest(_uri.getText().toString())

@@ -1,17 +1,24 @@
 package com.marcodama7.posty.message;
 
 /**
- * Created by Marco on 15/03/2015.
+ * File attachment in a Http request body
  */
-public class PostyAttachment {
+public class PostyFile {
 
-    String fileKey;
-    String filePath;
-    String mimeType;
+    String fileKey;     // key associated at file
+    String filePath;    // filepath (absolute)
+    String mimeType;    // optionally: mimetype
+    //TODO: mimetype
 
-    public PostyAttachment(String fileKey, String filePath) {
+    public PostyFile(String fileKey, String filePath) {
         this.fileKey = fileKey;
         this.filePath = filePath;
+    }
+
+    public PostyFile(String fileKey, String filePath, String mimeType) {
+        this.fileKey = fileKey;
+        this.filePath = filePath;
+        this.mimeType = mimeType;
     }
 
     public String getFileKey() {
