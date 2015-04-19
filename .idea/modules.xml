@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PostyProject.iml" filepath="$PROJECT_DIR$/PostyProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/posty/posty.iml" filepath="$PROJECT_DIR$/posty/posty.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/posty-sample.iml" filepath="$PROJECT_DIR$/app/posty-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/posty-sample/posty-sample.iml" filepath="$PROJECT_DIR$/posty-sample/posty-sample.iml" />
     </modules>
   </component>
 </project>
