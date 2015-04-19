@@ -1,5 +1,8 @@
 package com.marcodama7.posty.message;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +44,22 @@ public class PostyResponse {
 
     public String getResponse() {
         return response;
+    }
+
+    /**
+     *  If server response is Json data, return JsonObject created from this data, otherwise return null
+     * @return
+     */
+    public JSONObject getJsonResponse() {
+        JSONObject jsonObject = null;
+        if (getResponse() != null && getResponse().length() > 0) {
+            try {
+                jsonObject = new JSONObject(getResponse());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonObject;
     }
 
     public void setResponse(String response) {
