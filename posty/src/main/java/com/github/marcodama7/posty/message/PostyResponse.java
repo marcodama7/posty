@@ -1,4 +1,4 @@
-package com.marcodama7.posty.message;
+package com.github.marcodama7.posty.message;
 
 import org.json.JSONException;
 import org.json.JSONObject;

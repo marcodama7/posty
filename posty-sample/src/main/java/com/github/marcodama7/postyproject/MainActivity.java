@@ -1,4 +1,4 @@
-package com.marcodama7.postyproject;
+package com.github.marcodama7.postyproject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,13 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.marcodama7.posty.core.Posty;
-import com.marcodama7.posty.core.PostyMethod;
-import com.marcodama7.posty.listeners.PostyMultipleResponseListener;
-import com.marcodama7.posty.listeners.PostyResponseListener;
-import com.marcodama7.posty.message.PostyFile;
-import com.marcodama7.posty.message.PostyResponse;
-import com.marcodama7.posty.util.RealPathUtil;
+import com.github.marcodama7.posty.core.Posty;
+import com.github.marcodama7.posty.core.PostyMethod;
+import com.github.marcodama7.posty.listeners.PostyMultipleResponseListener;
+import com.github.marcodama7.posty.listeners.PostyResponseListener;
+import com.github.marcodama7.posty.message.PostyFile;
+import com.github.marcodama7.posty.message.PostyResponse;
+import com.github.marcodama7.posty.util.RealPathUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

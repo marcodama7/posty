@@ -1,4 +1,4 @@
-package com.marcodama7.posty;
+package com.github.marcodama7.posty;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

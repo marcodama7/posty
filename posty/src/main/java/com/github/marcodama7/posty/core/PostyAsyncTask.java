@@ -1,14 +1,14 @@
-package com.marcodama7.posty.core;
+package com.github.marcodama7.posty.core;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
-import com.marcodama7.posty.listeners.PostyMultipleResponseListener;
-import com.marcodama7.posty.message.PostyBody;
-import com.marcodama7.posty.message.PostyFile;
-import com.marcodama7.posty.message.PostyRequest;
-import com.marcodama7.posty.message.PostyResponse;
-import com.marcodama7.posty.util.UriUtils;
+import com.github.marcodama7.posty.listeners.PostyMultipleResponseListener;
+import com.github.marcodama7.posty.message.PostyBody;
+import com.github.marcodama7.posty.message.PostyFile;
+import com.github.marcodama7.posty.message.PostyRequest;
+import com.github.marcodama7.posty.message.PostyResponse;
+import com.github.marcodama7.posty.util.UriUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

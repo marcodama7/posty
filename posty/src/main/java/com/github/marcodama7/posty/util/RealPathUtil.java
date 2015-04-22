@@ -1,4 +1,4 @@
-package com.marcodama7.posty.util;
+package com.github.marcodama7.posty.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

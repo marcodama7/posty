@@ -1,6 +1,6 @@
-package com.marcodama7.posty.message;
-import com.marcodama7.posty.core.PostyMethod;
-import com.marcodama7.posty.listeners.PostyResponseListener;
+package com.github.marcodama7.posty.message;
+import com.github.marcodama7.posty.core.PostyMethod;
+import com.github.marcodama7.posty.listeners.PostyResponseListener;
 
 import java.util.HashMap;
 import java.util.Map;

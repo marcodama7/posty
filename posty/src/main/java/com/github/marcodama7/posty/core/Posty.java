@@ -1,6 +1,6 @@
-package com.marcodama7.posty.core;
+package com.github.marcodama7.posty.core;
 
-import com.marcodama7.posty.message.PostyRequest;
+import com.github.marcodama7.posty.message.PostyRequest;
 
 import java.net.CookieManager;
 import java.net.CookiePolicy;

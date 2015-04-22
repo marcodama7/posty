@@ -1,4 +1,4 @@
-package com.marcodama7.posty.core;
+package com.github.marcodama7.posty.core;
 
 /**
  * Created by Marco on 15/04/2015.
