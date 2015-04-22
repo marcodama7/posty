@@ -1,5 +1,6 @@
 package com.marcodama7.posty.core;
 
+import com.marcodama7.posty.listeners.PostyMultipleResponseListener;
 import com.marcodama7.posty.listeners.PostyResponseListener;
 import com.marcodama7.posty.message.PostyFile;
 import com.marcodama7.posty.message.PostyBody;
@@ -9,6 +10,7 @@ import com.marcodama7.posty.message.PostyResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,38 +19,63 @@ import java.util.Map;
  */
 public class PostyRequestDec {
 
-    PostyRequest request;
+    ArrayList<PostyRequest> requests;
+
 
     private PostyRequestDec(){
 
     }
 
+    private ArrayList<PostyRequest> getRequests(){
+        if (requests == null) requests = new ArrayList<PostyRequest>();
+        return requests;
+    }
+
+    private PostyRequest getLastRequest(){
+        return (getRequests().size()>0) ? getRequests().get(getRequests().size()-1) : null;
+    }
+
     public PostyRequestDec(PostyRequest request){
-        this.request = request;
+        getRequests().add(request);
     }
 
     public PostyRequestDec timeout(Integer timeoutMillisecond) {
-        request.setTimeoutMillisecond(timeoutMillisecond);
+        getLastRequest().setTimeoutMillisecond(timeoutMillisecond);
         return this;
     }
 
+    /**
+     * Adding another request
+     * @param uri
+     * @return
+     */
+    public PostyRequestDec newRequest(String uri){
+        getRequests().add(new PostyRequest(uri));
+        return this;
+    }
+
+    /**
+     * Set call back when http call is finished (successfully or with errors)
+     * @param postyResponseListener
+     * @return
+     */
     public PostyRequestDec onResponse(PostyResponseListener postyResponseListener) {
-        request.setPostyResponseListener(postyResponseListener);
+        getLastRequest().setPostyResponseListener(postyResponseListener);
         return this;
     }
 
     public PostyRequestDec headers(Map<String, String> headers) {
-        request.setHeaders(headers);
+        getLastRequest().setHeaders(headers);
         return this;
     }
 
     public PostyRequestDec header(String name, String value) {
-        request.addHeader(name, value);
+        getLastRequest().addHeader(name, value);
         return this;
     }
 
     public PostyRequestDec method(String method) {
-        request.setMethod(method);
+        getLastRequest().setMethod(method);
         return this;
     }
 
@@ -89,10 +116,35 @@ public class PostyRequestDec {
         return postyAsyncTask;
     }
 
+    /**
+     * Call a request created. If there are multiple requests, call last request.
+     * @return
+     */
     public PostyAsyncTask call() {
         PostyAsyncTask postyAsyncTask = new PostyAsyncTask();
-        postyAsyncTask.execute(request);
+        postyAsyncTask.execute(getLastRequest());
         return postyAsyncTask;
+    }
+
+    /**
+     * Call multiple requests. Passing a callback called when all requests are received
+     * @param postyMultipleResponseListener
+     * @return
+     */
+    public PostyAsyncTask multipleCall(PostyMultipleResponseListener postyMultipleResponseListener) {
+        if (getRequests() == null || getRequests().size() < 1) {
+            if (postyMultipleResponseListener != null) {
+                postyMultipleResponseListener.onResponse(null,0);
+            }
+            return null;
+        }
+        else {
+            PostyAsyncTask postyAsyncTask = new PostyAsyncTask();
+            postyAsyncTask.setPostyMultipleResponseListener(postyMultipleResponseListener);
+            postyAsyncTask.execute(getRequests().toArray(new PostyRequest[getRequests().size()]));
+            return postyAsyncTask;
+        }
+
     }
 
 
@@ -100,14 +152,13 @@ public class PostyRequestDec {
     /* Body creation methods
     /***********************************************************************************************************************************/
 
-
     /**
      * Creation of body passing custom PostyBody object
      * @param postyBody
      * @return PostyRequestDec
      */
     public PostyRequestDec body(PostyBody postyBody) {
-        request.setBody(postyBody);
+        getLastRequest().setBody(postyBody);
         return this;
     }
 
@@ -117,11 +168,11 @@ public class PostyRequestDec {
      * @return PostyRequestDec
      */
     public PostyRequestDec body(Map<String, String> paramethers) {
-        if (request.getBody() != null && request.getBody().hasBody()) {
-            request.getBody().addBody(paramethers);
+        if (getLastRequest().getBody() != null && getLastRequest().getBody().hasBody()) {
+            getLastRequest().getBody().addBody(paramethers);
         }
         else {
-            request.setBody(new PostyBody(paramethers,false));
+            getLastRequest().setBody(new PostyBody(paramethers, false));
         }
         return this;
     }
@@ -133,10 +184,10 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec body(String key, String value) {
-        if (request.getBody() == null) {
-            request.setBody(new PostyBody());
+        if (getLastRequest().getBody() == null) {
+            getLastRequest().setBody(new PostyBody());
         }
-        request.getBody().addBodyParam(key, value);
+        getLastRequest().getBody().addBodyParam(key, value);
         return this;
     }
 
@@ -148,11 +199,11 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec bodyUrlEncoded(Map<String, String> paramethers) {
-        if (request.getBody() != null && request.getBody().hasBody()) {
-            request.getBody().addBodyParamUrlEncoded(paramethers);
+        if (getLastRequest().getBody() != null && getLastRequest().getBody().hasBody()) {
+            getLastRequest().getBody().addBodyParamUrlEncoded(paramethers);
         }
         else {
-            request.setBody(new PostyBody(paramethers,true));
+            getLastRequest().setBody(new PostyBody(paramethers, true));
         }
         return this;
     }
@@ -163,7 +214,7 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec body(String customRawBody) {
-        request.setBody(new PostyBody(customRawBody));
+        getLastRequest().setBody(new PostyBody(customRawBody));
         return this;
     }
 
@@ -173,7 +224,7 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec body(JSONObject jsonObject) {
-        request.setBody(new PostyBody(jsonObject));
+        getLastRequest().setBody(new PostyBody(jsonObject));
         return this;
     }
 
@@ -183,7 +234,7 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec body(JSONArray jsonArray) {
-        request.setBody(new PostyBody(jsonArray));
+        getLastRequest().setBody(new PostyBody(jsonArray));
         return this;
     }
 
@@ -194,7 +245,7 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec body(List<PostyFile> files) {
-        request.setBody(new PostyBody(files));
+        getLastRequest().setBody(new PostyBody(files));
         return this;
     }
 
@@ -204,10 +255,10 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec body(PostyFile file) {
-        if (request.getBody() == null) {
-            request.setBody(new PostyBody());
+        if (getLastRequest().getBody() == null) {
+            getLastRequest().setBody(new PostyBody());
         }
-        request.getBody().add(file);
+        getLastRequest().getBody().add(file);
         return this;
     }
 
@@ -219,10 +270,10 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec file(String key, String filePath, String mimeType) {
-        if (request.getBody() == null) {
-            request.setBody(new PostyBody());
+        if (getLastRequest().getBody() == null) {
+            getLastRequest().setBody(new PostyBody());
         }
-        request.getBody().addFile(key, filePath, mimeType);
+        getLastRequest().getBody().addFile(key, filePath, mimeType);
         return this;
     }
 
@@ -233,10 +284,10 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec file(String key, String filePath) {
-        if (request.getBody() == null) {
-            request.setBody(new PostyBody());
+        if (getLastRequest().getBody() == null) {
+            getLastRequest().setBody(new PostyBody());
         }
-        request.getBody().addFile(key, filePath);
+        getLastRequest().getBody().addFile(key, filePath);
         return this;
     }
 
@@ -247,9 +298,11 @@ public class PostyRequestDec {
      * @return
      */
     public PostyRequestDec body(Map<String, String> paramethers, List<PostyFile> files) {
-        request.setBody(new PostyBody(paramethers, files));
+        getLastRequest().setBody(new PostyBody(paramethers, files));
         return this;
     }
+
+
 
 
 }

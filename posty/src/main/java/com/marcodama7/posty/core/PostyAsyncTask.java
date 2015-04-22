@@ -3,6 +3,7 @@ package com.marcodama7.posty.core;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.marcodama7.posty.listeners.PostyMultipleResponseListener;
 import com.marcodama7.posty.message.PostyBody;
 import com.marcodama7.posty.message.PostyFile;
 import com.marcodama7.posty.message.PostyRequest;
@@ -35,6 +36,16 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
 
     HttpURLConnection connection = null;
     List<FileInputStream> fileInputStreams = new ArrayList<>();
+
+    PostyMultipleResponseListener postyMultipleResponseListener;
+
+    public PostyMultipleResponseListener getPostyMultipleResponseListener() {
+        return postyMultipleResponseListener;
+    }
+
+    public void setPostyMultipleResponseListener(PostyMultipleResponseListener postyMultipleResponseListener) {
+        this.postyMultipleResponseListener = postyMultipleResponseListener;
+    }
 
     // Send Http Request with NO body
     private PostyResponse sendWithNoBody(PostyRequest request) throws Exception {
@@ -352,9 +363,23 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
     @Override
     protected void onPostExecute(PostyResponse[] results) {
         super.onPostExecute(results);
+        int numberOfErrors = 0;
         if (results != null) {
             for (int i=0; i<results.length; i++) {
+                // check if is in error
+                if (results[i] == null || results[i].inError()) {
+                    numberOfErrors ++;
+                }
+                // for multiple calling: set previuos response (if exists)
+                if (results[i] != null && i>0) {
+                    results[i].setPreviousResponse(results[i-1]);
+                }
+                // send a response to a callback
                 sendResponse(results[i]);
+            }
+            // if is setted a callbacks for multiple calls, calling this method passing arrays of results
+            if (getPostyMultipleResponseListener() != null) {
+                getPostyMultipleResponseListener().onResponse(results, numberOfErrors);
             }
         }
         // UI thread

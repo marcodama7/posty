@@ -15,8 +15,11 @@ public class PostyResponse {
     Throwable error;
     String errorMessage;
     Integer responseCode;
-    Map<String, List<String>> headers;
-    protected PostyRequest originalRequest;
+    Map<String, List<String>> headers;  // response headers
+    protected PostyRequest originalRequest; // original PostyRequest
+
+    PostyResponse previousResponse; // if there are mutiple http calls, this is the previous response
+
 
     public String getErrorMessage() {
         return errorMessage;
@@ -84,5 +87,17 @@ public class PostyResponse {
 
     public void setOriginalRequest(PostyRequest originalRequest) {
         this.originalRequest = originalRequest;
+    }
+
+    /**
+     * If there is a multiple http calls, return a previous response
+     * @return
+     */
+    public PostyResponse getPreviousResponse() {
+        return previousResponse;
+    }
+
+    public void setPreviousResponse(PostyResponse previousResponse) {
+        this.previousResponse = previousResponse;
     }
 }

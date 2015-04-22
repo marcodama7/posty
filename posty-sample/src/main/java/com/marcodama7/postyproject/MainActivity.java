@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.marcodama7.posty.core.Posty;
 import com.marcodama7.posty.core.PostyMethod;
+import com.marcodama7.posty.listeners.PostyMultipleResponseListener;
 import com.marcodama7.posty.listeners.PostyResponseListener;
 import com.marcodama7.posty.message.PostyFile;
 import com.marcodama7.posty.message.PostyResponse;
@@ -106,9 +107,10 @@ public class MainActivity extends ActionBarActivity {
                     files.add(new PostyFile(key, realFilePathImage2));
                 }
 
+                // First request
                 Posty.newRequest(_uri.getText().toString())
                         .body(postData, files)
-                        .header("X-Auth", "test test")
+                        .header("X-Request-Number", "1")
                         .method(PostyMethod.POST)
                         .body(postData)
                         .onResponse(new PostyResponseListener() {
@@ -120,14 +122,47 @@ public class MainActivity extends ActionBarActivity {
                                     if (message == null || message.length() < 1) {
                                         message = (postyResponse.getErrorMessage() != null && postyResponse.getErrorMessage().length() > 0) ? postyResponse.getErrorMessage() : "{empty}";
                                     }
-                                    displayDialog("result", message);
+                                    displayDialog("First Result", message);
                                 } else {
                                     // Http call success!
                                     String response = (postyResponse.getResponse() != null) ? postyResponse.getResponse() : "{empty}";
-                                    displayDialog("result", response);
+                                    displayDialog("First Result", response);
                                 }
                             }
-                        }).call();
+                        })
+                        //.call();
+                        // second request:
+                        .newRequest(_uri.getText().toString())
+                        .body(postData, files)
+                        .header("X-Request-Number", "2")
+                        .method(PostyMethod.POST)
+                        .body(postData)
+                        .onResponse(new PostyResponseListener() {
+                            @Override
+                            public void onResponse(PostyResponse postyResponse) {
+                                if (postyResponse.inError()) {
+                                    // Http call error
+                                    String message = postyResponse.getResponse();
+                                    if (message == null || message.length() < 1) {
+                                        message = (postyResponse.getErrorMessage() != null && postyResponse.getErrorMessage().length() > 0) ? postyResponse.getErrorMessage() : "{empty}";
+                                    }
+                                    displayDialog("Second Result", message);
+                                } else {
+                                    // Http call success!
+                                    String response = (postyResponse.getResponse() != null) ? postyResponse.getResponse() : "{empty}";
+                                    displayDialog("Second Result", response);
+                                }
+                            }
+                        })
+                        .multipleCall(new PostyMultipleResponseListener() {
+                            @Override
+                            public void onResponse(PostyResponse[] responses, int numberOfErrors) {
+                                int numberOfResponses = (responses == null) ? 0 : responses.length;
+                                String message = "This dialog is showed when all http calls are sended and received.";
+                                message+=" I can read "+numberOfResponses+" responses with "+numberOfErrors+" errors";
+                                displayDialog("All results", message);
+                            }
+                        });
 
             }
         });
