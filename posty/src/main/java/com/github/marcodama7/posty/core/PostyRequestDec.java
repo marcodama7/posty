@@ -45,8 +45,8 @@ public class PostyRequestDec {
 
     /**
      * Adding another request
-     * @param uri
-     * @return
+     * @param uri to call
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec newRequest(String uri){
         getRequests().add(new PostyRequest(uri));
@@ -55,8 +55,8 @@ public class PostyRequestDec {
 
     /**
      * Set call back when http call is finished (successfully or with errors)
-     * @param postyResponseListener
-     * @return
+     * @param postyResponseListener a method to call when the requests is sended and a response is received
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec onResponse(PostyResponseListener postyResponseListener) {
         getLastRequest().setPostyResponseListener(postyResponseListener);
@@ -117,7 +117,7 @@ public class PostyRequestDec {
 
     /**
      * Call a request created. If there are multiple requests, call last request.
-     * @return
+     * @return AsynchTask wich manage the current http request (a singular request)
      */
     public PostyAsyncTask call() {
         PostyAsyncTask postyAsyncTask = new PostyAsyncTask();
@@ -127,8 +127,8 @@ public class PostyRequestDec {
 
     /**
      * Call multiple requests. Passing a callback called when all requests are received
-     * @param postyMultipleResponseListener
-     * @return
+     * @param postyMultipleResponseListener a method wich is called when all requests are finished
+     * @return AsynchTask wich manage the current http requests
      */
     public PostyAsyncTask multipleCall(PostyMultipleResponseListener postyMultipleResponseListener) {
         if (getRequests() == null || getRequests().size() < 1) {
@@ -153,8 +153,8 @@ public class PostyRequestDec {
 
     /**
      * Creation of body passing custom PostyBody object
-     * @param postyBody
-     * @return PostyRequestDec
+     * @param postyBody a object wich encapsulate current body to send over http
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(PostyBody postyBody) {
         getLastRequest().setBody(postyBody);
@@ -162,9 +162,9 @@ public class PostyRequestDec {
     }
 
     /**
-     * Creation of body passing paramethers of pairs of key-value (in a Map<String, String> )
-     * @param paramethers
-     * @return PostyRequestDec
+     * Creation of body passing paramethers of pairs of key-value (in a Map)
+     * @param paramethers map of key-values paramethers
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(Map<String, String> paramethers) {
         if (getLastRequest().getBody() != null && getLastRequest().getBody().hasBody()) {
@@ -178,9 +178,9 @@ public class PostyRequestDec {
 
     /**
      * Adding in a body one paramether
-     * @param key
-     * @param value
-     * @return
+     * @param key a key of paramether
+     * @param value value of paramether
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(String key, String value) {
         if (getLastRequest().getBody() == null) {
@@ -193,9 +193,8 @@ public class PostyRequestDec {
 
     /**
      * Creation of body passing paramethers and store in body urlencoded,
-     * (ex key1=val1&key2=val2....)
-     * @param paramethers
-     * @return
+     * @param paramethers map of paramethers to add in a current body of request
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec bodyUrlEncoded(Map<String, String> paramethers) {
         if (getLastRequest().getBody() != null && getLastRequest().getBody().hasBody()) {
@@ -209,8 +208,8 @@ public class PostyRequestDec {
 
     /**
      * Creation of body with custom content (Raw values stored in a string)
-     * @param customRawBody
-     * @return
+     * @param customRawBody string that contains a custom body
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(String customRawBody) {
         getLastRequest().setBody(new PostyBody(customRawBody));
@@ -219,8 +218,8 @@ public class PostyRequestDec {
 
     /**
      * Creation of body with JsonObject
-     * @param jsonObject
-     * @return
+     * @param jsonObject to add in a current body
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(JSONObject jsonObject) {
         getLastRequest().setBody(new PostyBody(jsonObject));
@@ -229,8 +228,8 @@ public class PostyRequestDec {
 
     /**
      * Creation of body with jsonArray
-     * @param jsonArray
-     * @return
+     * @param jsonArray to add in a current body
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(JSONArray jsonArray) {
         getLastRequest().setBody(new PostyBody(jsonArray));
@@ -240,8 +239,8 @@ public class PostyRequestDec {
     /**
      * Creation of body with a list of files (to be uploaded!)
      * Any file is stored in a object PostyFile
-     * @param files
-     * @return
+     * @param files List of object PostyFile, that store the information of files to be uploaded
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(List<PostyFile> files) {
         getLastRequest().setBody(new PostyBody(files));
@@ -250,8 +249,8 @@ public class PostyRequestDec {
 
     /**
      * Adding PostyFile
-     * @param file
-     * @return
+     * @param file: object PostyFile, that store the information of files to be uploaded
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(PostyFile file) {
         if (getLastRequest().getBody() == null) {
@@ -263,11 +262,11 @@ public class PostyRequestDec {
 
     /**
      * Adding a file in a body
-     * @param key
-     * @param filePath
-     * @param mimeType
-     * @return
-     */
+     * @param key field key of file to be uploaded
+     * @param filePath absolute filepath of file to upload
+     * @param mimeType mimetyper of file
+     * @return instance of PostyRequestDec, wich store the current request(s)
+    */
     public PostyRequestDec file(String key, String filePath, String mimeType) {
         if (getLastRequest().getBody() == null) {
             getLastRequest().setBody(new PostyBody());
@@ -278,9 +277,9 @@ public class PostyRequestDec {
 
     /**
      * Adding a file in a body
-     * @param key
-     * @param filePath
-     * @return
+     * @param key field key of file to be uploaded
+     * @param filePath absolute filepath of file to upload
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec file(String key, String filePath) {
         if (getLastRequest().getBody() == null) {
@@ -291,10 +290,10 @@ public class PostyRequestDec {
     }
 
     /**
-     * Creation of body
-     * @param paramethers
-     * @param files
-     * @return
+     * Creation of body, adding a paramethers and files together
+     * @param paramethers Map of key-value pramethers
+     * @param files Arraylist of files to upload
+     * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(Map<String, String> paramethers, List<PostyFile> files) {
         getLastRequest().setBody(new PostyBody(paramethers, files));

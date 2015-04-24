@@ -1,21 +1,6 @@
 apply plugin: 'com.android.library'
+version = "0.0.3"
 
-apply plugin: 'maven'
-apply plugin: 'signing'
-
-version = "0.0.2"
-group = "com.github.marcodama7.posty"
-
-configurations {
-    archives {
-        extendsFrom configurations.default
-    }
-}
-
-signing {
-    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
-}
 
 android {
     compileSdkVersion 21
@@ -23,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 2
-        versionName "0.0.2"
+        versionCode 3
+        versionName "0.0.3"
     }
     buildTypes {
         release {
@@ -41,5 +26,4 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
 
-
-//apply from: '../maven_push.gradle'
+apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
