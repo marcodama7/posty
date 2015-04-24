@@ -1,6 +1,7 @@
-package com.github.marcodama7.posty.core;
+package com.github.marcodama7.posty;
 
-import com.github.marcodama7.posty.message.PostyRequest;
+import com.github.marcodama7.posty.core.PostyRequestDec;
+import com.github.marcodama7.posty.request.PostyRequest;
 
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -8,6 +9,9 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * Principal class for create instance of PostyRequestDec, wich wrap a new http request
+ */
 public class Posty {
 
     private static CookieManager cookieManager;

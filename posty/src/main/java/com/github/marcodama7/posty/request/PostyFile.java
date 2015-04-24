@@ -1,4 +1,4 @@
-package com.github.marcodama7.posty.message;
+package com.github.marcodama7.posty.request;
 
 /**
  * File attachment in a Http request body

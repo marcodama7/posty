@@ -17,6 +17,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px" />
             <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
                 android:text="Http POST"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -46,7 +48,7 @@
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/black"
-                    android:text="Post data Key"
+                    android:text="Paramether Key"
                     android:layout_weight="1"
                     android:layout_marginLeft="10dp"
                     android:layout_width="0dp"
@@ -64,7 +66,7 @@
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/black"
-                    android:text="Post Data Value"
+                    android:text="Paramether Value"
                     android:layout_weight="1"
                     android:layout_marginLeft="10dp"
                     android:layout_width="0dp"
@@ -100,7 +102,7 @@
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/black"
-                    android:text="Image 1 Value"
+                    android:text="Image 1 File"
                     android:layout_weight="1"
                     android:layout_marginLeft="10dp"
                     android:layout_width="0dp"
@@ -137,7 +139,7 @@
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:textColor="@android:color/black"
-                    android:text="Image 2 Value"
+                    android:text="Image 2 File"
                     android:layout_weight="1"
                     android:layout_marginLeft="10dp"
                     android:layout_width="0dp"
@@ -149,15 +151,12 @@
                     android:layout_height="80dp" />
             </LinearLayout>
 
-
-
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Send Http Call"
+                android:text="Send Http"
                 android:id="@+id/call"
                 android:layout_below="@+id/textView"
-
                 android:layout_marginTop="79dp" />
             <ImageView
                 android:background="@color/gray"

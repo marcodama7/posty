@@ -1,7 +1,7 @@
-package com.github.marcodama7.posty.core;
+package com.github.marcodama7.posty.request;
 
 /**
- * Created by Marco on 15/04/2015.
+ * Accepted Http methods
  */
 public class PostyMethod {
 

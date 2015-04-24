@@ -2,9 +2,10 @@ package com.github.marcodama7.posty.core;
 
 import com.github.marcodama7.posty.listeners.PostyMultipleResponseListener;
 import com.github.marcodama7.posty.listeners.PostyResponseListener;
-import com.github.marcodama7.posty.message.PostyFile;
-import com.github.marcodama7.posty.message.PostyBody;
-import com.github.marcodama7.posty.message.PostyRequest;
+import com.github.marcodama7.posty.request.PostyFile;
+import com.github.marcodama7.posty.request.PostyBody;
+import com.github.marcodama7.posty.request.PostyMethod;
+import com.github.marcodama7.posty.request.PostyRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

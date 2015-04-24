@@ -1,4 +1,4 @@
-package com.github.marcodama7.posty.message;
+package com.github.marcodama7.posty.request;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +51,7 @@ public class PostyResponse {
 
     /**
      *  If server response is Json data, return JsonObject created from this data, otherwise return null
-     * @return
+     * @return JsonObject that contains  response
      */
     public JSONObject getJsonResponse() {
         JSONObject jsonObject = null;
@@ -91,7 +91,7 @@ public class PostyResponse {
 
     /**
      * If there is a multiple http calls, return a previous response
-     * @return
+     * @return PostyResponse: previous response in a multicall (or null if there is a singular call)
      */
     public PostyResponse getPreviousResponse() {
         return previousResponse;

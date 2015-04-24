@@ -1,7 +1,7 @@
 package com.github.marcodama7.posty.util;
 
 /**
- * Created by Marco on 15/04/2015.
+ * Retrieve
  */
 public class UriUtils {
 

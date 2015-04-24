@@ -1,4 +1,4 @@
-package com.github.marcodama7.posty.message;
+package com.github.marcodama7.posty.request;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
