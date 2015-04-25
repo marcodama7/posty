@@ -1,8 +1,30 @@
 # posty
-Android Library for create Http requests asynchronous easily and customizable, with added one or more files.
+Android Library for create network requests asynchronous easily and customizable, with added one or more files to be upload.
 
 
-Example of usage:
+## Installing
+
+There are three ways to install this library
+
+#### As a Gradle dependency
+
+This is the preferred way. Simply add:
+
+```groovy
+compile 'com.github.marcodama7.posty:posty:0.0.5'
+```
+in the gradle.build file
+
+#### As a library project
+
+Download the source code and import it as a module in Android Studio or as a project in Eclipse. The project is available in the folder **posty**. 
+
+#### As a jar
+Visit the [releases](https://github.com/marcodama7/posty/releases/) page to download jars directly. You can drop them into your `libs` folder and configure the Java build path to include the library, or the gradle to add this library.
+
+
+
+##Examples
 
 ```java
 
@@ -68,3 +90,5 @@ Posty.
 			});
 			
 ```
+
+<a href='https://bintray.com/marcodama7/maven/Posty/_latestVersion'><img src='https://api.bintray.com/packages/marcodama7/maven/Posty/images/download.svg'></a>
