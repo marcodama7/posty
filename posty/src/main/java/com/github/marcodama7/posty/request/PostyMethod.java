@@ -3,7 +3,7 @@ package com.github.marcodama7.posty.request;
 /**
  * Accepted Http methods
  */
-public class PostyMethod {
+public interface PostyMethod {
 
     //FIXME
     public final static String GET = "GET";

@@ -8,7 +8,7 @@ public class PostyFile {
     String fileKey;     // key associated at file
     String filePath;    // filepath (absolute)
     String mimeType;    // optionally: mimetype
-    //TODO: mimetype
+    //TODO: manage mimetype
 
     public PostyFile(String fileKey, String filePath) {
         this.fileKey = fileKey;

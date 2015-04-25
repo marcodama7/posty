@@ -10,7 +10,6 @@ import com.github.marcodama7.posty.request.PostyFile;
 import com.github.marcodama7.posty.request.PostyMethod;
 import com.github.marcodama7.posty.request.PostyRequest;
 import com.github.marcodama7.posty.request.PostyResponse;
-import com.github.marcodama7.posty.util.UriUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -56,8 +55,8 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         connection = (HttpURLConnection) url.openConnection();
 
         // adding cookie
-        if(Posty.getCookieManager().getCookieStore().get(new URI(UriUtils.getBaseUri(request.getUri()))).size() > 0)  {
-            connection.setRequestProperty(ADD_COOKIES_HEADER, TextUtils.join(",", Posty.getCookieManager().getCookieStore().get(new URI(UriUtils.getBaseUri(request.getUri())))));
+        if(Posty.getCookieManager().getCookieStore().get(new URI(request.getUri())).size() > 0)  {
+            connection.setRequestProperty(ADD_COOKIES_HEADER, TextUtils.join(",", Posty.getCookieManager().getCookieStore().get(new URI(request.getUri()))));
         }
 
         // optional default is GET
@@ -96,7 +95,7 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         List<String> cookiesHeader = headerFields.get(RETRIEVE_COOKIES_HEADER);
         if(cookiesHeader != null) {
             for (String cookie : cookiesHeader) {
-                Posty.getCookieManager().getCookieStore().add(new URI(UriUtils.getBaseUri(request.getUri())), HttpCookie.parse(cookie).get(0));
+                Posty.getCookieManager().getCookieStore().add(new URI(request.getUri()), HttpCookie.parse(cookie).get(0));
             }
         }
         // set response code
@@ -112,8 +111,8 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         int timeout = (request.getTimeoutMillisecond() < 1) ? 10000 : request.getTimeoutMillisecond();
 
         // adding cookie
-        if(Posty.getCookieManager().getCookieStore().get(new URI(UriUtils.getBaseUri(request.getUri()))).size() > 0)  {
-            connection.setRequestProperty(ADD_COOKIES_HEADER, TextUtils.join(",", Posty.getCookieManager().getCookieStore().get(new URI(UriUtils.getBaseUri(request.getUri())))));
+        if(Posty.getCookieManager().getCookieStore().get(new URI(request.getUri())).size() > 0)  {
+            connection.setRequestProperty(ADD_COOKIES_HEADER, TextUtils.join(",", Posty.getCookieManager().getCookieStore().get(new URI(request.getUri()))));
         }
 
         connection.setConnectTimeout(timeout);
@@ -291,7 +290,7 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         List<String> cookiesHeader = headerFields.get(RETRIEVE_COOKIES_HEADER);
         if(cookiesHeader != null) {
             for (String cookie : cookiesHeader) {
-                Posty.getCookieManager().getCookieStore().add(new URI(UriUtils.getBaseUri(request.getUri())), HttpCookie.parse(cookie).get(0));
+                Posty.getCookieManager().getCookieStore().add(new URI(request.getUri()), HttpCookie.parse(cookie).get(0));
             }
         }
 
