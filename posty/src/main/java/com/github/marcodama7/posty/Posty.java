@@ -47,7 +47,6 @@ public class Posty {
         return cookieManager;
     }
 
-
     /**
      * Set another cookieManager
      * @param cookieManager a new CookieMagager
@@ -75,6 +74,5 @@ public class Posty {
             }
         }
     }
-
 
 }

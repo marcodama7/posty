@@ -369,8 +369,20 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
     }
 
     private void sendResponse(PostyResponse result){
-        if (result != null && result.getOriginalRequest() != null && result.getOriginalRequest().getPostyResponseListener() != null) {
-            result.getOriginalRequest().getPostyResponseListener().onResponse(result);
+        if (result != null && result.getOriginalRequest() != null){
+            if (!result.inError() && result.getOriginalRequest().getPostyResponseListener() != null) {
+                // success
+                result.getOriginalRequest().getPostyResponseListener().onResponse(result);
+            }
+            else if (result.inError()) {
+                // in error
+                if (result.getOriginalRequest().getPostyErrorListener() != null) {
+                    result.getOriginalRequest().getPostyErrorListener().onError(result);
+                }
+                else if (result.getOriginalRequest().getPostyResponseListener() != null) {
+                    result.getOriginalRequest().getPostyResponseListener().onResponse(result);
+                }
+            }
         }
     }
 

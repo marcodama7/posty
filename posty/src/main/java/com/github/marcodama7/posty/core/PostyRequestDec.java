@@ -1,5 +1,6 @@
 package com.github.marcodama7.posty.core;
 
+import com.github.marcodama7.posty.listeners.PostyErrorListener;
 import com.github.marcodama7.posty.listeners.PostyMultipleResponseListener;
 import com.github.marcodama7.posty.listeners.PostyResponseListener;
 import com.github.marcodama7.posty.request.PostyFile;
@@ -63,16 +64,6 @@ public class PostyRequestDec {
     }
 
     /**
-     * Set call back when http call is finished (successfully or with errors)
-     * @param postyResponseListener a method to call when the requests is sended and a response is received
-     * @return instance of PostyRequestDec, wich store the current request(s)
-     */
-    public PostyRequestDec onResponse(PostyResponseListener postyResponseListener) {
-        getLastRequest().setPostyResponseListener(postyResponseListener);
-        return this;
-    }
-
-    /**
      * Set headers of requests
      * @param headers: Map of pairs key-values of headers to add
      * @return instance of PostyRequestDec, wich store the current request(s)
@@ -103,29 +94,24 @@ public class PostyRequestDec {
         return this;
     }
 
-    public static PostyAsyncTask call(
-            String uri,
-            Map<String,String> headers,
-            PostyBody body,
-            PostyMethod method,
-            PostyResponseListener postyResponseListener) {
-        PostyAsyncTask postyAsyncTask = new PostyAsyncTask();
-        PostyRequest request = new PostyRequest();
-        request.setUri(uri);
-        request.setHeaders(headers);
-        request.setBody(body);
-        request.setMethod(method);
-        request.setPostyResponseListener(postyResponseListener);
-        postyAsyncTask.execute(request);
-        return postyAsyncTask;
+    /**
+     * Set call back when http call is finished (successfully or, if onErrorListener is null also with errors)
+     * @param postyResponseListener a method to call when the requests is sended and a response is received
+     * @return instance of PostyRequestDec, wich store the current request(s)
+     */
+    public PostyRequestDec onResponse(PostyResponseListener postyResponseListener) {
+        getLastRequest().setPostyResponseListener(postyResponseListener);
+        return this;
     }
 
-    public static PostyAsyncTask call(
-            String uri,
-            Map<String,String> headers,
-            PostyBody body,
-            PostyResponseListener postyResponseListener) {
-        return call(uri, headers, body, PostyMethod.GET, postyResponseListener);
+    /**
+     * Set call back when http call is finished with errors
+     * @param postyErrorListener a method to call when error occurred
+     * @return instance of PostyRequestDec, wich store the current request(s)
+     */
+    public PostyRequestDec onError(PostyErrorListener postyErrorListener) {
+        getLastRequest().setPostyErrorListener(postyErrorListener);
+        return this;
     }
 
     public static PostyAsyncTask call(PostyRequest[] requests) {
@@ -134,17 +120,46 @@ public class PostyRequestDec {
         return postyAsyncTask;
     }
 
-    public static PostyAsyncTask call(PostyRequest request) {
+    /**
+     *  Call a request created. If there are multiple requests, call last request.
+     *  Paramether is an handler called when request is sended and received.
+     *  In case of error, the paramether of responseListener.onResponse(PostyResponse response)
+     *  contain the error
+     * @param responseListener callBack called when request is sended and received
+     * @return instance of PostyRequestDec
+     */
+    public PostyAsyncTask call(PostyResponseListener responseListener) {
+        if (getLastRequest() != null) {
+            getLastRequest().setPostyResponseListener(responseListener);
+        }
         PostyAsyncTask postyAsyncTask = new PostyAsyncTask();
-        postyAsyncTask.execute(request);
+        postyAsyncTask.execute(getLastRequest());
         return postyAsyncTask;
     }
 
     /**
-     * Call a request created. If there are multiple requests, call last request.
-     * @return AsynchTask wich manage the current http request (a singular request)
+     *  Call a request created. If there are multiple requests, call last request.
+     * @return instance of PostyRequestDec
      */
     public PostyAsyncTask call() {
+        PostyAsyncTask postyAsyncTask = new PostyAsyncTask();
+        postyAsyncTask.execute(getLastRequest());
+        return postyAsyncTask;
+    }
+
+    /**
+     *  Call a request created. If there are multiple requests, call last request.
+     *  The first paramether is an handler called when request is sended  with successfull,
+     *  a second parameher is an handler called when request is sended with error.
+     * @param responseListener: callback called when request is sended successfully
+     * @param errorListener: callback called when an error occurred
+     * @return instance of PostyRequestDec
+     */
+    public PostyAsyncTask call(PostyResponseListener responseListener, PostyErrorListener errorListener) {
+        if (getLastRequest() != null) {
+            getLastRequest().setPostyResponseListener(responseListener);
+            getLastRequest().setPostyErrorListener(errorListener);
+        }
         PostyAsyncTask postyAsyncTask = new PostyAsyncTask();
         postyAsyncTask.execute(getLastRequest());
         return postyAsyncTask;

@@ -1,5 +1,6 @@
 package com.github.marcodama7.posty.request;
 import com.github.marcodama7.posty.enums.PostyMethod;
+import com.github.marcodama7.posty.listeners.PostyErrorListener;
 import com.github.marcodama7.posty.listeners.PostyResponseListener;
 
 import java.util.HashMap;
@@ -17,8 +18,8 @@ public class PostyRequest {
     PostyBody body;    // body of the request
     int timeoutMillisecond = 10000;
 
-    PostyResponseListener postyResponseListener; // callback when the http request is finished!
-
+    PostyResponseListener postyResponseListener; // callback when the http request is sended and received (with successfull and, if postyErrorListener is null, with error)!
+    PostyErrorListener postyErrorListener; // callback when the http request is sended and received with errors
 
     public PostyRequest(){
         method = PostyMethod.GET;
@@ -79,8 +80,16 @@ public class PostyRequest {
         return postyResponseListener;
     }
 
+    public PostyErrorListener getPostyErrorListener() {
+        return postyErrorListener;
+    }
+
     public void setPostyResponseListener(PostyResponseListener postyResponseListener) {
         this.postyResponseListener = postyResponseListener;
+    }
+
+    public void setPostyErrorListener(PostyErrorListener postyErrorListener) {
+        this.postyErrorListener = postyErrorListener;
     }
 
     public PostyBody getBody() {
