@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.github.marcodama7.posty.Posty;
-import com.github.marcodama7.posty.request.PostyMethod;
+import com.github.marcodama7.posty.enums.PostyMethod;
 import com.github.marcodama7.posty.listeners.PostyMultipleResponseListener;
 import com.github.marcodama7.posty.listeners.PostyResponseListener;
 import com.github.marcodama7.posty.request.PostyFile;

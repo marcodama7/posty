@@ -1,4 +1,5 @@
 package com.github.marcodama7.posty.request;
+import com.github.marcodama7.posty.enums.PostyMethod;
 import com.github.marcodama7.posty.listeners.PostyResponseListener;
 
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 public class PostyRequest {
 
-    String method; // method: GET | POST | DELETE | PUT etc ...
+    PostyMethod method; // method: GET | POST | DELETE | PUT etc ...
     String uri;
     Map<String, String> headers; // if headers != null and are size 0, no headers are sended !
     PostyBody body;    // body of the request
@@ -40,14 +41,14 @@ public class PostyRequest {
         this.timeoutMillisecond = timeoutMillisecond;
     }
 
-    public String getMethod() {
+    public PostyMethod getMethod() {
         if (method == null) {
             method = PostyMethod.GET;
         }
         return method;
     }
 
-    public void setMethod(String method) {
+    public void setMethod(PostyMethod method) {
         this.method = method;
     }
 

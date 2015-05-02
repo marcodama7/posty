@@ -4,7 +4,7 @@ import com.github.marcodama7.posty.listeners.PostyMultipleResponseListener;
 import com.github.marcodama7.posty.listeners.PostyResponseListener;
 import com.github.marcodama7.posty.request.PostyFile;
 import com.github.marcodama7.posty.request.PostyBody;
-import com.github.marcodama7.posty.request.PostyMethod;
+import com.github.marcodama7.posty.enums.PostyMethod;
 import com.github.marcodama7.posty.request.PostyRequest;
 
 import org.json.JSONArray;
@@ -21,13 +21,26 @@ public class PostyRequestDec {
 
     ArrayList<PostyRequest> requests;
 
-
     private PostyRequestDec(){
 
     }
 
+    public PostyRequestDec(ArrayList<PostyRequest> requests){
+        this.requests = requests;
+    }
+
+    /**
+     * Adding another request
+     * @param uri to call
+     * @return instance of PostyRequestDec, wich store the current request(s)
+     */
+    public PostyRequestDec newRequest(String uri){
+        getRequests().add(new PostyRequest(uri));
+        return this;
+    }
+
     private ArrayList<PostyRequest> getRequests(){
-        if (requests == null) requests = new ArrayList<PostyRequest>();
+        if (requests == null) requests = new ArrayList<>();
         return requests;
     }
 
@@ -39,18 +52,13 @@ public class PostyRequestDec {
         getRequests().add(request);
     }
 
-    public PostyRequestDec timeout(Integer timeoutMillisecond) {
-        getLastRequest().setTimeoutMillisecond(timeoutMillisecond);
-        return this;
-    }
-
     /**
-     * Adding another request
-     * @param uri to call
+     * Set timeout of connection
+     * @param timeoutMillisecond: timeout connection in milliseconds
      * @return instance of PostyRequestDec, wich store the current request(s)
      */
-    public PostyRequestDec newRequest(String uri){
-        getRequests().add(new PostyRequest(uri));
+    public PostyRequestDec timeout(Integer timeoutMillisecond) {
+        getLastRequest().setTimeoutMillisecond(timeoutMillisecond);
         return this;
     }
 
@@ -64,17 +72,33 @@ public class PostyRequestDec {
         return this;
     }
 
+    /**
+     * Set headers of requests
+     * @param headers: Map of pairs key-values of headers to add
+     * @return instance of PostyRequestDec, wich store the current request(s)
+     */
     public PostyRequestDec headers(Map<String, String> headers) {
         getLastRequest().setHeaders(headers);
         return this;
     }
 
+    /**
+     * Add one header in a current headers of request
+     * @param name: name of headers to add
+     * @param value: value of headers to add
+     * @return instance of PostyRequestDec, wich store the current request(s)
+     */
     public PostyRequestDec header(String name, String value) {
         getLastRequest().addHeader(name, value);
         return this;
     }
 
-    public PostyRequestDec method(String method) {
+    /**
+     * Set method
+     * @param method Postymethod (POST, GET, PUT, ...)
+     * @return instance of PostyRequestDec
+     */
+    public PostyRequestDec method(PostyMethod method) {
         getLastRequest().setMethod(method);
         return this;
     }
@@ -83,7 +107,7 @@ public class PostyRequestDec {
             String uri,
             Map<String,String> headers,
             PostyBody body,
-            String method,
+            PostyMethod method,
             PostyResponseListener postyResponseListener) {
         PostyAsyncTask postyAsyncTask = new PostyAsyncTask();
         PostyRequest request = new PostyRequest();
@@ -144,7 +168,6 @@ public class PostyRequestDec {
             postyAsyncTask.execute(getRequests().toArray(new PostyRequest[getRequests().size()]));
             return postyAsyncTask;
         }
-
     }
 
 

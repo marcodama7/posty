@@ -5,9 +5,8 @@ import android.text.TextUtils;
 
 import com.github.marcodama7.posty.Posty;
 import com.github.marcodama7.posty.listeners.PostyMultipleResponseListener;
-import com.github.marcodama7.posty.request.PostyBody;
 import com.github.marcodama7.posty.request.PostyFile;
-import com.github.marcodama7.posty.request.PostyMethod;
+import com.github.marcodama7.posty.enums.PostyMethod;
 import com.github.marcodama7.posty.request.PostyRequest;
 import com.github.marcodama7.posty.request.PostyResponse;
 
@@ -23,7 +22,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -60,12 +58,10 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         }
 
         // optional default is GET
-        connection.setRequestMethod(request.getMethod());
+        connection.setRequestMethod(request.getMethod().getRawMethod());
         // adding the headers ! (if exists)
         if (request.getHeaders() != null && request.getHeaders().size() > 0) {
-            Iterator<String> iMap = request.getHeaders().keySet().iterator();
-            while (iMap.hasNext()) {
-                String key = iMap.next();
+            for (String key : request.getHeaders().keySet()) {
                 String value = request.getHeaders().get(key);
                 if (value != null) {
                     connection.setRequestProperty(key, value);
@@ -75,13 +71,12 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         if (!request.hasNoResponse()) {
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;
-            StringBuffer responseString = new StringBuffer();
-
+            StringBuilder responseStringBuffer = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
-                responseString.append(inputLine);
+                responseStringBuffer.append(inputLine);
             }
             in.close();
-            response.setResponse(responseString.toString());
+            response.setResponse(responseStringBuffer.toString());
         }
         else {
             response.setResponse(null);
@@ -116,70 +111,68 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         }
 
         connection.setConnectTimeout(timeout);
-        DataOutputStream outputStream = null;
-        InputStream inputStream = null;
+        DataOutputStream outputStream;
+        InputStream inputStream;
         String twoHyphens = "--";
         String boundary = "*****" + Long.toString(System.currentTimeMillis()) + "*****";
         String lineEnd = "\r\n";
         String result;
         // Http Method
         switch (request.getMethod()) {
-            case PostyMethod.POST:
+            case POST:
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
                 break;
-            case PostyMethod.DELETE:
+            case DELETE:
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
                 break;
-            case PostyMethod.PUT:
+            case PUT:
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
                 break;
-            case PostyMethod.HEAD:
+            case HEAD:
                 connection.setDoInput(true);
                 connection.setUseCaches(false);
                 break;
-            case PostyMethod.OPTIONS:
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.setUseCaches(false);
-                break;
-            case PostyMethod.TRACE:
+            case OPTIONS:
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
                 break;
-            case PostyMethod.PATCH:
+            case TRACE:
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setUseCaches(false);
+                break;
+            case PATCH:
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
                 break;
         }
         connection.setRequestProperty("Connection", "Keep-Alive");
-        connection.setRequestMethod(request.getMethod());
+        connection.setRequestMethod(request.getMethod().getRawMethod());
         /* Content Type */
         if (request.getHeaders() == null || request.getHeaders().size() > 0) {
             switch (request.getBody().getBodyType()) {
-                case PostyBody.BODY_MULTIPART:
-                case PostyBody.BODY_FORM_DATA:
+                case BODY_MULTIPART:
+                case BODY_FORM_DATA:
                     connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
                     break;
-                case PostyBody.BODY_URLENCODED_FORM_DATA:
+                case BODY_URLENCODED_FORM_DATA:
                     connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
                     break;
-                case PostyBody.BODY_JSONOBJECT:
+                case BODY_JSONOBJECT:
                     connection.setRequestProperty("Content-Type", "application/json");
                     break;
             }
             // adding the headers ! (if exists)
             if (request.getHeaders() != null) {
-                Iterator<String> iMap = request.getHeaders().keySet().iterator();
-                while (iMap.hasNext()) {
-                    String key = iMap.next();
+                for (String key : request.getHeaders().keySet()) {
                     String value = request.getHeaders().get(key);
                     if (value != null) {
                         connection.setRequestProperty(key, value);
@@ -191,17 +184,15 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         outputStream = new DataOutputStream(connection.getOutputStream());
         /* output Stream */
         switch (request.getBody().getBodyType()) {
-            case PostyBody.BODY_URLENCODED_FORM_DATA:
-            case PostyBody.BODY_JSONOBJECT:
-            case PostyBody.BODY_CUSTOM:
+            case BODY_URLENCODED_FORM_DATA:
+            case BODY_JSONOBJECT:
+            case BODY_CUSTOM:
                 outputStream.writeBytes(request.getBody().getCustomBody());
                 break;
-            case PostyBody.BODY_MULTIPART:
+            case BODY_MULTIPART:
 
                 if (request.getBody().getParamethers().size() >0) {
-                    Iterator<String> iMapMulti = request.getBody().getParamethers().keySet().iterator();
-                    while (iMapMulti.hasNext()) {
-                        String key = iMapMulti.next();
+                    for (String key : request.getBody().getParamethers().keySet()) {
                         String value = request.getBody().getParamethers().get(key);
                         outputStream.writeBytes(twoHyphens + boundary + lineEnd);
                         outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + lineEnd);
@@ -215,7 +206,7 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
                 if (request.getBody() != null && request.getBody().getFiles() != null && request.getBody().getFiles().size() > 0) {
                     int bytesRead, bytesAvailable, bufferSize;
                     byte[] buffer;
-                    int maxBufferSize = 1 * 1024 * 1024;
+                    int maxBufferSize = 1024 * 1024;
 
                     for (PostyFile mpf : request.getBody().getFiles()) {
                         if (mpf == null || mpf.getFileKey() == null || mpf.getFilePath() == null)
@@ -253,11 +244,8 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
 
                 }
                 break;
-
-            case PostyBody.BODY_FORM_DATA:
-                Iterator<String> iMap = request.getBody().getParamethers().keySet().iterator();
-                while (iMap.hasNext()) {
-                    String key = iMap.next();
+            case BODY_FORM_DATA:
+                for (String key : request.getBody().getParamethers().keySet()) {
                     String value = request.getBody().getParamethers().get(key);
                     outputStream.writeBytes(twoHyphens + boundary + lineEnd);
                     outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"" + lineEnd);
@@ -306,63 +294,58 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         // size = number of http requests
         int size = (requests==null)? 0 : requests.length;
         PostyResponse[] responseBeans = new PostyResponse[size];
-        if (requests != null && requests.length > 0) {
-            for (int i=0; i<requests.length; i++) {
-                PostyResponse responseBean = new PostyResponse();
-                responseBean.setOriginalRequest(requests[i]);
-                // Send Get Request
-                try {
-                    if (requests[i].getMethod() == PostyMethod.GET) {
-                        responseBean = sendWithNoBody(requests[i]);
+        if (requests != null && requests.length > 0) for (int i = 0; i < requests.length; i++) {
+            PostyResponse responseBean = new PostyResponse();
+            responseBean.setOriginalRequest(requests[i]);
+            // Send Get Request
+            try {
+                if (requests[i].getMethod() == null || requests[i].getMethod().getRawMethod().equals(PostyMethod.GET.getRawMethod())) {
+                    responseBean = sendWithNoBody(requests[i]);
+                } else {
+                    responseBean = sendWithBody(requests[i]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                responseBean.setError(e);
+                if (connection != null) {
+                    if (connection.getErrorStream() != null) {
+                        responseBean.setResponse(convertStreamToString(connection.getErrorStream()));
                     }
-                    else {
-                        responseBean = sendWithBody(requests[i]);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    responseBean.setError(e);
-                    String serverMessageError = "";
-                    if (connection != null) {
-                        if (connection.getErrorStream() != null) {
-                            responseBean.setResponse(convertStreamToString(connection.getErrorStream()));
+                    // try to retrieve response code
+                    try {
+                        if (connection.getResponseCode() > 0) {
+                            responseBean.setResponseCode(connection.getResponseCode());
                         }
-                        // try to retrieve response code
+                    } catch (IOException e1) {
+                        // nothig to do
+                        e1.printStackTrace();
+                    }
+                }
+            } finally {
+                if (fileInputStreams != null && fileInputStreams.size() > 0) {
+                    for (FileInputStream fis : fileInputStreams) {
                         try {
-                            if (connection.getResponseCode()>0) {
-                                responseBean.setResponseCode(connection.getResponseCode());
-                            }
-                        } catch (IOException e1) {
-                            // nothig to do
+                            fis.close();
+                        } catch (IOException e) {
+                            // nothing to do in this place
                         }
                     }
                 }
-                finally {
-                    if (fileInputStreams != null && fileInputStreams.size() > 0) {
-                        for (FileInputStream fis : fileInputStreams) {
-                            try {
-                                fis.close();
-                            }
-                            catch (IOException e) {
-                                // nothing to do in this place
-                            }
-                            fis = null;
-                        }
-                    }
-                    // disconnect
-                    if (connection != null) {
-                        connection.disconnect();
-                        connection = null;
-                    }
+                // disconnect
+                if (connection != null) {
+                    connection.disconnect();
+                    connection = null;
+                }
 
-                }
-                responseBeans[i] = responseBean;
             }
+            responseBeans[i] = responseBean;
         }
         return responseBeans;
     }
 
     @Override
     protected void onPostExecute(PostyResponse[] results) {
+        // UI thread
         super.onPostExecute(results);
         int numberOfErrors = 0;
         if (results != null) {
@@ -383,7 +366,6 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
                 getPostyMultipleResponseListener().onResponse(results, numberOfErrors);
             }
         }
-        // UI thread
     }
 
     private void sendResponse(PostyResponse result){
@@ -396,7 +378,7 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
 
-        String line = null;
+        String line;
         try {
             while ((line = reader.readLine()) != null) {
                 sb.append(line);

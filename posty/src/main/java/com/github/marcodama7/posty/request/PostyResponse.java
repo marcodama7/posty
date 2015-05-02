@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * wrapper class for encapsulate original request, and server response. Output of PTAsync
+ * Encapsulate original request, and server response. Output of PostyAyncTask
  */
 public class PostyResponse {
 

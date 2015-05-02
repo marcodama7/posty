@@ -9,5 +9,4 @@ public interface PostyMultipleResponseListener {
 
     public void onResponse(PostyResponse[] responses, int numberOfErrors);
 
-
 }
