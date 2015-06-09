@@ -1,5 +1,7 @@
 package com.github.marcodama7.posty.core;
 
+import android.net.Uri;
+
 import com.github.marcodama7.posty.listeners.PostyErrorListener;
 import com.github.marcodama7.posty.listeners.PostyMultipleResponseListener;
 import com.github.marcodama7.posty.listeners.PostyResponseListener;
@@ -122,8 +124,8 @@ public class PostyRequestDec {
 
     /**
      *  Call a request created. If there are multiple requests, call last request.
-     *  Paramether is an handler called when request is sended and received.
-     *  In case of error, the paramether of responseListener.onResponse(PostyResponse response)
+     *  Parameter is an handler called when request is sended and received.
+     *  In case of error, the parameter of responseListener.onResponse(PostyResponse response)
      *  contain the error
      * @param responseListener callBack called when request is sended and received
      * @return instance of PostyRequestDec
@@ -149,8 +151,8 @@ public class PostyRequestDec {
 
     /**
      *  Call a request created. If there are multiple requests, call last request.
-     *  The first paramether is an handler called when request is sended  with successfull,
-     *  a second parameher is an handler called when request is sended with error.
+     *  The first parameter is an handler called when request is sended  with successfull,
+     *  a second parameter is an handler called when request is sended with error.
      * @param responseListener: callback called when request is sended successfully
      * @param errorListener: callback called when an error occurred
      * @return instance of PostyRequestDec
@@ -201,24 +203,24 @@ public class PostyRequestDec {
     }
 
     /**
-     * Creation of body passing paramethers of pairs of key-value (in a Map)
-     * @param paramethers map of key-values paramethers
+     * Creation of body passing parameters of pairs of key-value (in a Map)
+     * @param parameters map of key-values parameters
      * @return instance of PostyRequestDec, wich store the current request(s)
      */
-    public PostyRequestDec body(Map<String, String> paramethers) {
+    public PostyRequestDec body(Map<String, String> parameters) {
         if (getLastRequest().getBody() != null && getLastRequest().getBody().hasBody()) {
-            getLastRequest().getBody().addBody(paramethers);
+            getLastRequest().getBody().addBody(parameters);
         }
         else {
-            getLastRequest().setBody(new PostyBody(paramethers, false));
+            getLastRequest().setBody(new PostyBody(parameters, false));
         }
         return this;
     }
 
     /**
-     * Adding in a body one paramether
-     * @param key a key of paramether
-     * @param value value of paramether
+     * Adding in a body one parameter
+     * @param key a key of parameter
+     * @param value value of parameter
      * @return instance of PostyRequestDec, wich store the current request(s)
      */
     public PostyRequestDec body(String key, String value) {
@@ -229,18 +231,86 @@ public class PostyRequestDec {
         return this;
     }
 
-
     /**
-     * Creation of body passing paramethers and store in body urlencoded,
-     * @param paramethers map of paramethers to add in a current body of request
+     * Adding in a URL query string parameter
+     * @param queryStringKey a key of parameter
+     * @param queryStringValue value of parameter
      * @return instance of PostyRequestDec, wich store the current request(s)
      */
-    public PostyRequestDec bodyUrlEncoded(Map<String, String> paramethers) {
+    public PostyRequestDec queryString(String queryStringKey, String queryStringValue) {
+        if (getLastRequest().getUri() != null && getLastRequest().getUri().length() > 0
+                && queryStringKey != null && queryStringValue != null) {
+            String uri = getLastRequest().getUri();
+            boolean otherParameters = false;
+            if (!uri.contains("?")) {
+                uri += "?";
+            }
+            else if (uri.contains("=") && uri.indexOf("?") < uri.lastIndexOf("=")) {
+                otherParameters = true;
+            }
+
+            uri = (otherParameters) ? uri+"&"+ Uri.encode(queryStringKey) +"="+ Uri.encode(queryStringValue) :  uri+Uri.encode(queryStringKey) +"="+ Uri.encode(queryStringValue);
+            getLastRequest().setUri(uri);
+        }
+        return this;
+    }
+
+    /**
+     * Adding in a URL query string parameter
+     * @param queryString a raw queryString
+     * @return instance of PostyRequestDec, wich store the current request(s)
+     */
+    public PostyRequestDec queryString(String queryString) {
+        if (getLastRequest().getUri() != null && getLastRequest().getUri().length() > 0
+                && queryString != null && queryString.length()>0) {
+            String uri = getLastRequest().getUri();
+
+            if (!uri.contains("?")) {
+                uri += "?";
+            }
+            uri = (!uri.contains("?")) ? uri + "?" + queryString : uri + queryString;
+            getLastRequest().setUri(uri);
+        }
+        return this;
+    }
+
+    /**
+     * Adding in a URL query string parameters
+     * @param queryStringParameters map of key - values of query string
+     * @return instance of PostyRequestDec, wich store the current request(s)
+     */
+    public PostyRequestDec queryString(Map<String, String> queryStringParameters) {
+        if (getLastRequest().getUri() != null && getLastRequest().getUri().length() > 0
+                && queryStringParameters != null && queryStringParameters.size() > 0) {
+            String uri = getLastRequest().getUri();
+            boolean otherParameters = false;
+            if (!uri.contains("?")) {
+                uri += "?";
+            }
+            else if (uri.contains("=") && uri.indexOf("?") < uri.lastIndexOf("=")) {
+                otherParameters = true;
+            }
+            for (String key : queryStringParameters.keySet()) {
+                uri = (otherParameters) ? uri+"&"+ Uri.encode(key) +"="+ Uri.encode(queryStringParameters.get(key)) :  uri+Uri.encode(key) +"="+ Uri.encode(queryStringParameters.get(key));
+                otherParameters = true;
+            }
+            getLastRequest().setUri(uri);
+        }
+        return this;
+    }
+
+
+    /**
+     * Creation of body passing parameters and store in body urlencoded,
+     * @param parameters map of parameters to add in a current body of request
+     * @return instance of PostyRequestDec, wich store the current request(s)
+     */
+    public PostyRequestDec bodyUrlEncoded(Map<String, String> parameters) {
         if (getLastRequest().getBody() != null && getLastRequest().getBody().hasBody()) {
-            getLastRequest().getBody().addBodyParamUrlEncoded(paramethers);
+            getLastRequest().getBody().addBodyParamUrlEncoded(parameters);
         }
         else {
-            getLastRequest().setBody(new PostyBody(paramethers, true));
+            getLastRequest().setBody(new PostyBody(parameters, true));
         }
         return this;
     }
@@ -329,13 +399,13 @@ public class PostyRequestDec {
     }
 
     /**
-     * Creation of body, adding a paramethers and files together
-     * @param paramethers Map of key-value pramethers
+     * Creation of body, adding a parameters and files together
+     * @param parameters Map of key-value pramethers
      * @param files Arraylist of files to upload
      * @return instance of PostyRequestDec, wich store the current request(s)
      */
-    public PostyRequestDec body(Map<String, String> paramethers, List<PostyFile> files) {
-        getLastRequest().setBody(new PostyBody(paramethers, files));
+    public PostyRequestDec body(Map<String, String> parameters, List<PostyFile> files) {
+        getLastRequest().setBody(new PostyBody(parameters, files));
         return this;
     }
 
