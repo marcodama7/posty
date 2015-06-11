@@ -42,12 +42,12 @@ public class PostyRequestDec {
         return this;
     }
 
-    private ArrayList<PostyRequest> getRequests(){
+    public ArrayList<PostyRequest> getRequests(){
         if (requests == null) requests = new ArrayList<>();
         return requests;
     }
 
-    private PostyRequest getLastRequest(){
+    public PostyRequest getLastRequest(){
         return (getRequests().size()>0) ? getRequests().get(getRequests().size()-1) : null;
     }
 
