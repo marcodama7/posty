@@ -107,7 +107,8 @@ public class MainActivity extends ActionBarActivity {
                 }
 
                 // First request
-                Posty.newRequest(_uri.getText().toString())
+                Posty.
+                        newRequest(_uri.getText().toString())
                         .body(postData, files)
                         .header("X-Request-Number", "1")
                         .method(PostyMethod.POST)
@@ -153,12 +154,34 @@ public class MainActivity extends ActionBarActivity {
                                 }
                             }
                         })
+                        .newRequest(_uri.getText().toString())
+                        .bodyUrlEncoded("url_paramether_1", "url_value_1")
+                        .bodyUrlEncoded("url_paramether_2", "url_value_2")
+                        .method(PostyMethod.POST)
+                        .onResponse(new PostyResponseListener() {
+                            @Override
+                            public void onResponse(PostyResponse postyResponse) {
+                                // 3^ call
+                                if (postyResponse.inError()) {
+                                    // Http call error
+                                    String message = postyResponse.getResponse();
+                                    if (message == null || message.length() < 1) {
+                                        message = (postyResponse.getErrorMessage() != null && postyResponse.getErrorMessage().length() > 0) ? postyResponse.getErrorMessage() : "{empty}";
+                                    }
+                                    displayDialog("Third Result", message);
+                                } else {
+                                    // Http call success!
+                                    String response = (postyResponse.getResponse() != null) ? postyResponse.getResponse() : "{empty}";
+                                    displayDialog("Third Result", response);
+                                }
+                            }
+                        })
                         .multipleCall(new PostyMultipleResponseListener() {
                             @Override
                             public void onResponse(PostyResponse[] responses, int numberOfErrors) {
                                 int numberOfResponses = (responses == null) ? 0 : responses.length;
                                 String message = "This dialog is showed when all http calls are sended and received.";
-                                message+=" I can read "+numberOfResponses+" responses with "+numberOfErrors+" errors";
+                                message += " I can read " + numberOfResponses + " responses with " + numberOfErrors + " errors";
                                 displayDialog("All results", message);
                             }
                         });

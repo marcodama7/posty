@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -311,6 +312,18 @@ public class PostyRequestDec {
         }
         else {
             getLastRequest().setBody(new PostyBody(parameters, true));
+        }
+        return this;
+    }
+
+    public PostyRequestDec bodyUrlEncoded(String parametherName, String parametherValue) {
+        if (getLastRequest().getBody() == null || (!getLastRequest().getBody().hasBody())) {
+            Map<String,String> paramethers = new HashMap<>();
+            paramethers.put(parametherName, parametherValue);
+            getLastRequest().setBody(new PostyBody(paramethers, true));
+        }
+        else {
+            getLastRequest().getBody().addBodyParamUrlEncoded(parametherName, parametherValue);
         }
         return this;
     }

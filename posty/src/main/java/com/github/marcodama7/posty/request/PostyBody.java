@@ -50,7 +50,7 @@ public class PostyBody {
     }
 
     public void addBodyParamUrlEncoded(String key, String value) {
-        customBody = (customBody == null || customBody.length() < 1) ? key+"="+value : "&"+key+"="+value;
+        customBody = (customBody == null || customBody.length() < 1) ? key+"="+value : customBody+"&"+key+"="+value;
         bodyType = BodyType.BODY_URLENCODED_FORM_DATA;
     }
 
