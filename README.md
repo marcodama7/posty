@@ -74,7 +74,7 @@ There are three ways to install this library
 Simply add:
 
 ```groovy
-compile 'com.github.marcodama7.posty:posty:0.0.7'
+compile 'com.github.marcodama7.posty:posty:0.1.1'
 ```
 in the gradle.build file
 
