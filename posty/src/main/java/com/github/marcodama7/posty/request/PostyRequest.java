@@ -17,6 +17,7 @@ public class PostyRequest {
     Map<String, String> headers; // if headers != null and are size 0, no headers are sended !
     PostyBody body;    // body of the request
     int timeoutMillisecond = 10000;
+    Object tag; // used for retrieve particularly request in case of multiple calls
 
     PostyResponseListener postyResponseListener; // callback when the http request is sended and received (with successfull and, if postyErrorListener is null, with error)!
     PostyErrorListener postyErrorListener; // callback when the http request is sended and received with errors
@@ -107,5 +108,21 @@ public class PostyRequest {
     /* True if this http method has not a response */
     public boolean hasNoResponse() {
         return getMethod() == PostyMethod.HEAD;
+    }
+
+    /**
+     * Retrieve tag for request, for identify more easyly a particular requests in case of multiple requests
+     * @return
+     */
+    public Object getTag() {
+        return tag;
+    }
+
+    /**
+     * Add tag to this request, for retrieve more easyly in case of multiple calls
+     * @param tag
+     */
+    public void setTag(Object tag) {
+        this.tag = tag;
     }
 }

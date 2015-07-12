@@ -34,6 +34,18 @@ public class PostyRequestDec {
     }
 
     /**
+     * Add tag to current request, for retrieve more easyly in case of multiple calls
+     * @param tag
+     * @return
+     */
+    public PostyRequestDec addTag(Object tag) {
+        getLastRequest().setTag(tag);
+        return this;
+    }
+
+
+
+    /**
      * Adding another request
      * @param uri to call
      * @return instance of PostyRequestDec, wich store the current request(s)

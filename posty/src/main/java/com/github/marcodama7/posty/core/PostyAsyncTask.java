@@ -294,7 +294,8 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         // size = number of http requests
         int size = (requests==null)? 0 : requests.length;
         PostyResponse[] responseBeans = new PostyResponse[size];
-        if (requests != null && requests.length > 0) for (int i = 0; i < requests.length; i++) {
+        if (requests != null && requests.length > 0)
+            for (int i = 0; i < requests.length; i++) {
             PostyResponse responseBean = new PostyResponse();
             responseBean.setOriginalRequest(requests[i]);
             // Send Get Request

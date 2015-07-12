@@ -112,6 +112,7 @@ public class MainActivity extends ActionBarActivity {
                         .body(postData, files)
                         .header("X-Request-Number", "1")
                         .method(PostyMethod.POST)
+                        .addTag("1")
                         .body(postData)
                         .onResponse(new PostyResponseListener() {
                             @Override
@@ -136,6 +137,7 @@ public class MainActivity extends ActionBarActivity {
                         .body(postData, files)
                         .header("X-Request-Number", "2")
                         .method(PostyMethod.POST)
+                        .addTag("2")
                         .body(postData)
                         .onResponse(new PostyResponseListener() {
                             @Override
@@ -157,6 +159,7 @@ public class MainActivity extends ActionBarActivity {
                         .newRequest(_uri.getText().toString())
                         .bodyUrlEncoded("url_paramether_1", "url_value_1")
                         .bodyUrlEncoded("url_paramether_2", "url_value_2")
+                        .addTag("3")
                         .method(PostyMethod.POST)
                         .onResponse(new PostyResponseListener() {
                             @Override
@@ -181,7 +184,16 @@ public class MainActivity extends ActionBarActivity {
                             public void onResponse(PostyResponse[] responses, int numberOfErrors) {
                                 int numberOfResponses = (responses == null) ? 0 : responses.length;
                                 String message = "This dialog is showed when all http calls are sended and received.";
-                                message += " I can read " + numberOfResponses + " responses with " + numberOfErrors + " errors";
+
+                                // read all tags of the requests
+                                String tags = "";
+                                if (responses != null) {
+                                    for (PostyResponse response : responses)
+                                        tags += (response != null && response.getTag()!=null) ? "["+response.getTag()+"]" : "[]";
+                                }
+
+                                message += " I can read " + numberOfResponses + " responses with " + numberOfErrors + " errors. ";
+                                message += "The tags of original requests are {"+tags+"}";
                                 displayDialog("All results", message);
                             }
                         });

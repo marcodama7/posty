@@ -100,4 +100,13 @@ public class PostyResponse {
     public void setPreviousResponse(PostyResponse previousResponse) {
         this.previousResponse = previousResponse;
     }
+
+    /**
+     * Retrieve tag of original request, for identify more easyly a particular request in case of multiple requests
+     * @return
+     */
+    public Object getTag(){
+        return (getOriginalRequest() != null) ? getOriginalRequest().getTag() : null;
+    }
+
 }
