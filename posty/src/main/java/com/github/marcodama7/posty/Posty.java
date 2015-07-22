@@ -35,6 +35,18 @@ public class Posty {
         return posty.ptRequest;
     }
 
+
+    /**
+     * Static method for create Decorator PostyRequestDec from list of request (multiple requests call)
+     * @param requests
+     * @return
+     */
+    public static PostyRequestDec newRequest(List<PostyRequest> requests) {
+        Posty posty = new Posty();
+        posty.ptRequest = new PostyRequestDec(requests);
+        return posty.ptRequest;
+    }
+
     /**
      * Return a Cookie Manager
      * @return a cookie manager

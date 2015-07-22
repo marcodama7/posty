@@ -23,13 +23,17 @@ import java.util.Map;
  */
 public class PostyRequestDec {
 
-    ArrayList<PostyRequest> requests;
+    List<PostyRequest> requests;
 
     private PostyRequestDec(){
 
     }
 
-    public PostyRequestDec(ArrayList<PostyRequest> requests){
+    /**
+     * Constructor for create decorator PostyRequest from list of request (to call in sequences)
+     * @param requests
+     */
+    public PostyRequestDec(List<PostyRequest> requests){
         this.requests = requests;
     }
 
@@ -55,7 +59,7 @@ public class PostyRequestDec {
         return this;
     }
 
-    public ArrayList<PostyRequest> getRequests(){
+    public List<PostyRequest> getRequests(){
         if (requests == null) requests = new ArrayList<>();
         return requests;
     }
