@@ -3,6 +3,8 @@ import com.github.marcodama7.posty.enums.PostyMethod;
 import com.github.marcodama7.posty.listeners.PostyErrorListener;
 import com.github.marcodama7.posty.listeners.PostyResponseListener;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +62,31 @@ public class PostyRequest {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public URI getBaseURI() {
+        try {
+            return new URI(getBaseURIAsString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getBaseURIAsString() {
+        if (getUri() == null || getUri().length() <1) {
+            return null;
+        }
+        try {
+            URI uri = new URI(getUri());
+            return uri.getScheme() + "://"+uri.getHost();
+        }
+        catch (Exception ex) {
+            String uri = (getUri().contains("://") && getUri().indexOf("://") + 3 < getUri().length())? getUri().substring(0,getUri().indexOf("://") + 3) : getUri();
+            if (uri.contains("/") && uri.split("\\/").length>0) {
+                uri = uri.split("\\/")[0];
+            }
+            return uri;
+        }
     }
 
     public Map<String, String> getHeaders() {

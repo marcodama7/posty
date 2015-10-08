@@ -52,9 +52,21 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         URL url = new URL(request.getUri());
         connection = (HttpURLConnection) url.openConnection();
 
+        int timeout = (request.getTimeoutMillisecond() < 1) ? 10000 : request.getTimeoutMillisecond();
+
+        connection.setConnectTimeout(timeout);
+        connection.setReadTimeout(timeout);
+
+
         // adding cookie
-        if(Posty.getCookieManager().getCookieStore().get(new URI(request.getUri())).size() > 0)  {
-            connection.setRequestProperty(ADD_COOKIES_HEADER, TextUtils.join(",", Posty.getCookieManager().getCookieStore().get(new URI(request.getUri()))));
+        if (Posty.getCookieManager().getCookieStore().getCookies() != null && Posty.getCookieManager().getCookieStore().getCookies().size() >0) {
+            URI uri = request.getBaseURI();
+            if (uri != null) {
+                List<HttpCookie> cookies = Posty.getCookieManager().getCookieStore().get(uri);
+                if (cookies != null) {
+                    connection.setRequestProperty(ADD_COOKIES_HEADER, TextUtils.join(",", cookies));
+                }
+            }
         }
 
         // optional default is GET
@@ -86,11 +98,21 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         response.setOriginalRequest(request);
 
         // Reading cookie
+
         Map<String, List<String>> headerFields = connection.getHeaderFields();
         List<String> cookiesHeader = headerFields.get(RETRIEVE_COOKIES_HEADER);
+
         if(cookiesHeader != null) {
             for (String cookie : cookiesHeader) {
-                Posty.getCookieManager().getCookieStore().add(new URI(request.getUri()), HttpCookie.parse(cookie).get(0));
+                URI uri = request.getBaseURI();
+                if (uri != null) {
+                    List<HttpCookie> cookies = HttpCookie.parse(cookie);
+                    if (cookies != null) {
+                        for (HttpCookie httpCookie : cookies) {
+                            Posty.getCookieManager().getCookieStore().add(uri, httpCookie);
+                        }
+                    }
+                }
             }
         }
         // set response code
@@ -103,14 +125,21 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         PostyResponse response = new PostyResponse();
         URL url = new URL(request.getUri());
         connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection.setFollowRedirects(false);
+
         int timeout = (request.getTimeoutMillisecond() < 1) ? 10000 : request.getTimeoutMillisecond();
+        connection.setConnectTimeout(timeout);
+        connection.setReadTimeout(timeout);
 
         // adding cookie
         if(Posty.getCookieManager().getCookieStore().get(new URI(request.getUri())).size() > 0)  {
-            connection.setRequestProperty(ADD_COOKIES_HEADER, TextUtils.join(",", Posty.getCookieManager().getCookieStore().get(new URI(request.getUri()))));
+            URI uri = request.getBaseURI();
+            if (uri !=  null) {
+                connection.setRequestProperty(ADD_COOKIES_HEADER, TextUtils.join(",", Posty.getCookieManager().getCookieStore().get(uri)));
+            }
         }
 
-        connection.setConnectTimeout(timeout);
+
         DataOutputStream outputStream;
         InputStream inputStream;
         String twoHyphens = "--";
@@ -278,7 +307,15 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         List<String> cookiesHeader = headerFields.get(RETRIEVE_COOKIES_HEADER);
         if(cookiesHeader != null) {
             for (String cookie : cookiesHeader) {
-                Posty.getCookieManager().getCookieStore().add(new URI(request.getUri()), HttpCookie.parse(cookie).get(0));
+                URI uri = request.getBaseURI();
+                if (uri != null) {
+                    List<HttpCookie> cookies = HttpCookie.parse(cookie);
+                    if (cookies != null) {
+                        for (HttpCookie httpCookie : cookies) {
+                            Posty.getCookieManager().getCookieStore().add(uri, httpCookie);
+                        }
+                    }
+                }
             }
         }
 
@@ -407,4 +444,5 @@ public class PostyAsyncTask extends AsyncTask<PostyRequest, String, PostyRespons
         }
         return sb.toString();
     }
+
 }
